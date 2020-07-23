@@ -1,10 +1,10 @@
 const w : number = window.innerWidth
 const h : number = window.innerHeight
 const parts : number = 3
-const scGap : number = 0.02
+const scGap : number = 0.02 / parts
 const delay : number = 20
-const sizeFactor : number = 4
-const foreColors : Array<String> = ["indigo", "teal", "cyan", "green", "purple"]
+const sizeFactor : number = 8
+const foreColors : Array<String> = ["#3F51B5", "#FF5722", "#f44336", "#4CAF50", "#6200EA"]
 const backColor : string = "#bdbdbd"
 
 class ScaleUtil {
@@ -14,7 +14,7 @@ class ScaleUtil {
     }
 
     static divideScale(scale : number, i : number, n : number) : number {
-        return Math.min(1 / n, ScaleUtil.divideScale(scale, i, n)) * n
+        return Math.min(1 / n, ScaleUtil.maxScale(scale, i, n)) * n
     }
 
     static sinify(scale : number) : number {
@@ -180,12 +180,12 @@ class BoxBreakDown {
         this.curr.draw(context)
     }
 
-    update(cb : Function) {
-        this.curr.update(cb)
+    startUpdating(cb : Function) {
+        this.curr.startUpdating(cb)
     }
 
-    startUpdating(cb : Function) {
-        this.curr.startUpdating(() => {
+    update(cb : Function) {
+        this.curr.update(() => {
             this.curr = this.curr.getNext(this.dir, () =>{
                 this.dir *= -1
             })
