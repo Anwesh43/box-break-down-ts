@@ -1,10 +1,10 @@
 const w : number = window.innerWidth
 const h : number = window.innerHeight
-const parts : number = 2
+const parts : number = 3
 const scGap : number = 0.02
 const delay : number = 20
 const sizeFactor : number = 4
-const foreColor : string = "indigo"
+const foreColors : Array<String> = ["indigo", "teal", "cyan", "green", "purple"]
 const backColor : string = "#bdbdbd"
 
 class ScaleUtil {
@@ -19,6 +19,33 @@ class ScaleUtil {
 
     static sinify(scale : number) : number {
         return Math.sin(scale * Math.PI)
+    }
+}
+
+class DrawingUtil {
+
+    static drawBoxBreakDown(context : CanvasRenderingContext2D, i : number, scale : number) {
+        const sf : number = ScaleUtil.sinify(scale)
+        const sf1 : number = ScaleUtil.divideScale(sf, 0, parts)
+        const sf2 : number = ScaleUtil.divideScale(sf, 1, parts)
+        const sf3 : number = ScaleUtil.divideScale(sf, 2, parts)
+        const size : number = Math.min(w, h) / 8
+        context.save()
+        context.translate((w / 2 - size) * (sf3 - sf2), h / 2 * sf3 + (h / 2 - size) * sf2)
+        context.fillRect((-size) * sf1, 0, size * sf1, size)
+        context.restore()
+    }
+    static drawBBDNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.fillStyle = foreColors[i]
+        context.save()
+        context.translate(w / 2, 0)
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.scale(1 - 2 * j, 1)
+            DrawingUtil.drawBoxBreakDown(context, i, scale)
+            context.restore()
+        }
+        context.restore()
     }
 }
 
