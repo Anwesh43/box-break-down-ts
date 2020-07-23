@@ -189,3 +189,25 @@ class BoxBreakDown {
         })
     }
 }
+
+class Renderer {
+
+    bbd : BoxBreakDown = new BoxBreakDown()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.bbd.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.bbd.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.bbd.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
